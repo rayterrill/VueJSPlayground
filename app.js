@@ -51,16 +51,15 @@ Vue.component('another-component', {
     },
     mixins: [myMixin], //use our mixin to 
     props: ['token'], //token is an input to our component
-    template: '<div>{{ diffOutput }}</div>', //use output in our template
-    mounted() {
+    template: '<div v-if="token">{{ token }}</div><div v-else>Loading...</div>', //use output in our template
+    updated() {
         this.anotherComponentMethod()
     },
     methods: {
         anotherComponentMethod() {
+            console.log('token is: ' + this.token);
             console.log('output is: ' + this.output) //available via the mixin even though we haven't defined this locally
             console.log('called anotherComponentMethod')
-            //setting a local value for output - not set via mixin
-            this.diffOutput = 'anotherComponentMethod output'
         }
     }
 });
@@ -75,9 +74,15 @@ var app = new Vue({
         this.getToken()
     },
     methods: {
-        getToken() {
+        delayedFunction() {
+            console.log('setting authContext and token after delay...')
             this.authContext = 'boomshakalaka';
             this.token = 'boomshakalaka';
+        },
+        getToken() {
+            setTimeout(() => {
+                this.delayedFunction();
+            }, 3000);
         }
     }
   })
